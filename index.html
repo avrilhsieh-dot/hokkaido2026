@@ -249,32 +249,15 @@
                             <option value="其他">✨ 其他</option>
                         </select>
                     </div>
-                    <input v-model="newExpense.shop" type="text" placeholder="商店名稱" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
-                    <div class="flex gap-2">
-                        <select v-model="newExpense.paymentMethod" class="flex-1 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
-                            <option value="現金">現金</option>
-                            <option value="PayPay">PayPay</option>
-                            <option value="Suica">Suica</option>
-                            <option value="信用卡">信用卡</option>
-                        </select>
-                        <select v-model="newExpense.currency" class="flex-initial w-24 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
-                            <option value="JPY">JPY</option>
-                            <option value="TWD">TWD</option>
-                        </select>
-                        <input v-model.number="newExpense.amount" type="number" :placeholder="'金額 (' + newExpense.currency + ')'" class="flex-1 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
-                    </div>
+                    <input v-model.number="newExpense.amount" type="number" placeholder="金額 (JPY)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
                     <input v-model="newExpense.description" type="text" placeholder="描述 (如：六花亭伴手禮)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
-                    <input v-model="newExpense.receiptUrl" type="text" placeholder="收據圖片連結 (選填)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
                     <button @click="addExpense" class="w-full bg-milktea-400 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-milktea-500 active:scale-[0.98] transition-all">確認新增</button>
                 </div>
             </div>
 
-            <div v-else class="mb-4 flex gap-2">
-                <button @click="showExpenseForm = true" class="flex-1 bg-white border-2 border-dashed border-milktea-200 text-milktea-400 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
+            <div v-else class="mb-4">
+                <button @click="showExpenseForm = true" class="w-full bg-white border-2 border-dashed border-milktea-200 text-milktea-400 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
                     <i class="fas fa-plus-circle"></i> 新增一筆支出
-                </button>
-                <button @click="exportExpensesToExcel" class="flex-initial w-1/4 bg-white border-2 border-milktea-200 text-milktea-800 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
-                    <i class="fas fa-file-excel"></i> 匯出
                 </button>
             </div>
 
@@ -302,29 +285,16 @@
                                     <i v-else class="fas fa-ellipsis-h"></i>
                                 </div>
                                 <div>
-                                    <div class="font-bold text-milktea-900 text-sm">{{ exp.shop }} - {{ exp.description }}</div>
-                                    <div class="text-[10px] text-milktea-400 flex items-center gap-1">
-                                        <span>{{ exp.category }}</span>
-                                        <span>•</span>
-                                        <span>{{ exp.paymentMethod }}</span>
-                                        <a v-if="exp.receiptUrl" :href="exp.receiptUrl" target="_blank" class="ml-1 text-blue-500 hover:underline">
-                                            <i class="fas fa-receipt"></i>
-                                        </a>
-                                    </div>
+                                    <div class="font-bold text-milktea-900 text-sm">{{ exp.description }}</div>
+                                    <div class="text-[10px] text-milktea-400">{{ exp.category }}</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="text-right">
-                                    <div class="font-bold text-milktea-900">
-                                        <span v-if="exp.currency === 'JPY'">¥</span><span v-else>NT$</span> {{ exp.amount.toLocaleString() }}
-                                    </div>
-                                    <div v-if="exp.currency === 'JPY'" class="text-[10px] text-milktea-400">約 NT$ {{ exp.amountTWD.toLocaleString() }}</div>
+                                    <div class="font-bold text-milktea-900">¥ {{ exp.amount.toLocaleString() }}</div>
                                 </div>
                                 <button @click="deleteExpense(exp.id)" class="text-milktea-100 hover:text-red-300 transition-colors">
                                     <i class="fas fa-trash-alt text-xs"></i>
-                                </button>
-                                <button @click="editExpense(exp.id)" class="text-milktea-100 hover:text-milktea-500 transition-colors">
-                                    <i class="fas fa-edit text-xs"></i>
                                 </button>
                             </div>
                         </div>
@@ -365,7 +335,6 @@
             // Expense State
             const expenses = ref([]);
             const showExpenseForm = ref(false);
-            const editingExpenseId = ref(null);
             const newExpense = ref({
                 day: 1,
                 category: '餐飲',
@@ -388,69 +357,18 @@
                 return groups;
             });
 
-            const resetNewExpenseForm = () => {
-                newExpense.value.day = currentDay.value + 1; // Default to current day
-                newExpense.value.shop = '';
-                newExpense.value.category = '餐飲'; // Reset category to default
-                newExpense.value.paymentMethod = '現金'; // Reset paymentMethod to default
-                newExpense.value.amount = null;
-                newExpense.value.currency = 'JPY'; // Reset currency to default
-                newExpense.value.description = '';
-                newExpense.value.receiptUrl = '';
-                editingExpenseId.value = null; // Clear editing state
-            };
-
-            const saveExpense = () => {
-                if (!newExpense.value.amount || !newExpense.value.description || !newExpense.value.shop) {
-                    alert('請填寫完整資訊 (商店、金額、描述)');
+            const addExpense = () => {
+                if (!newExpense.value.amount || !newExpense.value.description) {
+                    alert('請填寫完整資訊');
                     return;
                 }
-                
-                let amountJPY = null;
-                let amountTWD = null;
-
-                if (newExpense.value.currency === 'JPY') {
-                    amountJPY = newExpense.value.amount;
-                    amountTWD = Math.round(newExpense.value.amount * 0.205 * 100) / 100; // Round to 2 decimal places
-                } else { // TWD
-                    amountTWD = newExpense.value.amount;
-                    amountJPY = Math.round(newExpense.value.amount / 0.205 * 100) / 100; // For display consistency
-                }
-
-                if (editingExpenseId.value) {
-                    // Update existing expense
-                    const index = expenses.value.findIndex(exp => exp.id === editingExpenseId.value);
-                    if (index !== -1) {
-                        expenses.value[index] = {
-                            id: editingExpenseId.value,
-                            day: newExpense.value.day,
-                            shop: newExpense.value.shop,
-                            category: newExpense.value.category,
-                            paymentMethod: newExpense.value.paymentMethod,
-                            amountJPY: amountJPY,
-                            amountTWD: amountTWD,
-                            currency: newExpense.value.currency,
-                            description: newExpense.value.description,
-                            receiptUrl: newExpense.value.receiptUrl
-                        };
-                    }
-                } else {
-                    // Add new expense
-                    expenses.value.push({
-                        id: Date.now(),
-                        day: newExpense.value.day,
-                        shop: newExpense.value.shop,
-                        category: newExpense.value.category,
-                        paymentMethod: newExpense.value.paymentMethod,
-                        amountJPY: amountJPY,
-                        amountTWD: amountTWD,
-                        currency: newExpense.value.currency,
-                        description: newExpense.value.description,
-                        receiptUrl: newExpense.value.receiptUrl
-                    });
-                }
-                
-                resetNewExpenseForm();
+                expenses.value.push({
+                    id: Date.now(),
+                    ...newExpense.value
+                });
+                // Reset form
+                newExpense.value.amount = null;
+                newExpense.value.description = '';
                 showExpenseForm.value = false;
                 saveExpenses();
             };
@@ -460,41 +378,6 @@
                     expenses.value = expenses.value.filter(e => e.id !== id);
                     saveExpenses();
                 }
-            };
-
-            const exportExpensesToExcel = () => {
-                if (expenses.value.length === 0) {
-                    alert('沒有任何支出記錄可以匯出。');
-                    return;
-                }
-
-                const headers = ['日期', '商店', '費用類別', '付款方式', '金額(JPY)', '金額(TWD)', '描述', '收據連結'];
-                const csvRows = [];
-                csvRows.push(headers.join(','));
-
-                expenses.value.forEach(exp => {
-                    const date = itinerary.value.find(day => day.dayNum === exp.day)?.dateShort || `Day ${exp.day}`;
-                    const row = [
-                        `"${date}"`,
-                        `"${exp.shop}"`,
-                        `"${exp.category}"`,
-                        `"${exp.paymentMethod}"`,
-                        exp.amountJPY !== null ? exp.amountJPY : '',
-                        exp.amountTWD !== null ? exp.amountTWD : '',
-                        `"${exp.description}"`,
-                        `"${exp.receiptUrl}"`
-                    ];
-                    csvRows.push(row.join(','));
-                });
-
-                const csvString = csvRows.join('\n');
-                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.setAttribute('download', 'hokkaido_expenses.csv');
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
             };
 
             const saveExpenses = () => {
@@ -921,6 +804,7 @@
                         { 
                             time: '08:50', title: 'Stay FuRaNo出發', icon: 'fas fa-car-side', 
                             lat: 43.3413368, lng: 142.3807395, 
+                            navUrl: 'https://www.google.com/maps/place/Stay+FuRaNo/@43.3413368,142.2283042,12z/data=!4m15!1m2!2m1!1sStay+FuRaNo!3m11!1s0x5f734dc7a820a4e3:0xb59b17f2a78c9f83!5m4!1s2026-07-07!2i2!4m1!1i2!8m2!3d43.3413368!4d142.3807395!15sCgtTdGF5IEZ1UmFOb5IBBWhvdGVs4AEA!16s%2Fg%2F11y27bycw4?entry=ttu&g_ep=EgoyMDI2MDQyMC4wIKXMDSoASAFQAw%3D%3D', 
                             guide: '告別富良野，驅車前往札幌市區。', 
                             travelTime: '1小時10分', travelMode: 'drive', hideNav: true 
                         },
@@ -962,7 +846,7 @@
                         },
                         { 
                             time: '14:35', title: '札幌啤酒博物館', icon: 'fas fa-beer-mug-empty', 
-                            lat: 43.071623819758074, lng: 141.36896604097146, 
+                            lat: 43.07156895778757, lng: 141.36950248278112, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C%E5%95%A4%E9%85%92%E5%8D%9A%E7%89%A9%E9%A4%A8', 
                             guide: '百年紅磚建築，了解札幌啤酒歷史與試飲。', 
                             travelTime: '15分', travelMode: 'drive' 
@@ -978,7 +862,7 @@
                         },
                         { 
                             time: '16:55', title: '晚餐：牛タンの笑や', icon: 'fas fa-fire-burner', 
-                            lat: 43.06366129396579, lng: 141.3520688698073, 
+                            lat: 43.06367697084177, lng: 141.3520795986435, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=%E7%89%9B%E3%82%BF%E3%83%B3%E3%81%AE%E7%AC%91%E3%82%84', 
                             guide: '札幌在地好評的厚切牛舌專賣。', 
                             travelTime: '5分', travelMode: 'drive',
@@ -1037,8 +921,8 @@
                             ]
                         },
                         { time: '18:50', title: '狸小路商店街', icon: 'fas fa-store', lat: 43.05735615993111, lng: 141.3527091832984, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E7%8B%B8%E5%B0%8F%E8%B7%AF%E5%95%86%E5%BA%97%E8%A1%97', guide: '札幌最熱鬧的商店街，藥妝、唐吉訶德一次滿足。', travelTime: '5分', travelMode: 'walk' },
-                        { time: '21:25', title: '宵夜：串鳥 南二條店', icon: 'fas fa-drumstick-bite', lat: 43.05748427366777, lng: 141.3500724544624, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E4%B8%B2%E9%B3%A5+%E5%8D%97%E4%BA%8C%E6%A2%9D%E5%BA%97', guide: '北海道超人氣平價炭火烤肉串。', travelTime: '10分', travelMode: 'walk' },
-                        { time: '22:28', title: '宿：ALPHABED INN 札幌大通公園', icon: 'fas fa-bed', lat: 43.0584422057973, lng: 141.34649098329848, navUrl: 'https://www.google.com/maps/search/?api=1&query=ALPHABED+INN+%E6%9C%AD%E5%B9%8C%E5%A4%A7%E9%80%9A%E5%85%AC%E5%9C%92', guide: '養足精神準備明日行程。' }
+                        { time: '21:25', title: '宵夜：串鳥 南二條店', icon: 'fas fa-drumstick-bite', lat: 43.05747643443854, lng: 141.3501260986434, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E4%B8%B2%E9%B3%A5+%E5%8D%97%E4%BA%8C%E6%A2%9D%E5%BA%97', guide: '北海道超人氣平價炭火烤肉串。', travelTime: '10分', travelMode: 'walk' },
+                        { time: '22:28', title: '宿：ALPHABED INN 札幌大通公園', icon: 'fas fa-bed', lat: 43.05844213138715, lng: 141.3465660672788, navUrl: 'https://www.google.com/maps/search/?api=1&query=ALPHABED+INN+%E6%9C%AD%E5%B9%8C%E5%A4%A7%E9%80%9A%E5%85%AC%E5%9C%92', guide: '養足精神準備明日行程。' }
                     ]
                 },
                 { 
@@ -1081,7 +965,7 @@
                                 }
                             ]
                         },
-                        { time: '11:00', title: '午餐：湯咖喱 奥芝商店 站前創成寺', icon: 'fas fa-bowl-food', lat: 43.06695830776714, lng: 141.35432826795417, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E5%A5%A5%E8%8A%9D%E5%95%86%E5%BA%97+%E9%A7%85%E5%89%8D%E5%89%B5%E6%88%90%E5%AF%BA', guide: '濃郁鮮蝦湯底的排隊名店湯咖哩。', travelTime: '5分', travelMode: 'walk' },
+                        { time: '11:00', title: '午餐：湯咖喱 奥芝商店 站前創成寺', icon: 'fas fa-bowl-food', lat: 43.06697398380002, lng: 141.35432826795417, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E5%A5%A5%E8%8A%9D%E5%95%86%E5%BA%97+%E9%A7%85%E5%89%8D%E5%89%B5%E6%88%90%E5%AF%BA', guide: '濃郁鮮蝦湯底的排隊名店湯咖哩。', travelTime: '5分', travelMode: 'walk' },
                         { time: '12:10', title: '東急百貨札幌店', icon: 'fas fa-bag-shopping', lat: 43.0668641, lng: 141.3525418, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E6%80%A5%E7%99%BE%E8%B2%A8%E5%BA%97+%E6%9C%AD%E5%B9%8C%E5%BA%97', guide: '餐後繼續於百貨內自由活動。', travelTime: '50分', travelMode: 'drive' },
                         { 
                             time: '15:45', title: 'Es Con Field Hokkaido', icon: 'fas fa-baseball', 
@@ -1100,7 +984,7 @@
                         },
                         { 
                             time: '21:40', title: '宿：ALPHABED INN 札幌大通公園', icon: 'fas fa-bed', 
-                            lat: 43.0584422057973, lng: 141.34649098329848, 
+                            lat: 43.05844213138715, lng: 141.3465660672788, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=ALPHABED+INN+%E6%9C%AD%E5%B9%8C%E5%A4%A7%E9%80%9A%E5%85%AC%E5%9C%92', 
                             guide: '賽後回飯店休息，為最後一天做準備。',
                             parkings: [
@@ -1133,10 +1017,10 @@
                     dayNum: 9, dateShort: '7/11', title: '最後採買與歸途', area: '新千歲 / 桃園', 
                     events: [
                         { time: '07:40', title: '早餐：すき家 札幌南1条西11丁目店', icon: 'fas fa-utensils', lat: 43.057367156216344, lng: 141.34108352377268, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E3%81%99%E3%81%8D%E5%AE%B6+%E6%9C%AD%E5%B9%8C%E5%8D%971%E6%9D%A1%E8%A5%BF11%E4%B8%81%E7%9B%AE%E5%BA%97', guide: '便利美味的日式牛丼早餐。', travelTime: '10分', travelMode: 'walk' },
-                        { time: '08:40', title: 'ALPHABED INN 札幌大通公園Check out', icon: 'fas fa-key', lat: 43.0584422057973, lng: 141.34649098329848, navUrl: 'https://www.google.com/maps/search/?api=1&query=ALPHABED+INN+%E6%9C%AD%E5%B9%8C%E5%A4%A7%E9%80%9A%E5%85%AC%E9%80%9A%E5%85%AC%E5%9C%92', guide: '整理行囊，退房準備離開札幌。', travelTime: '15分', travelMode: 'drive' },
+                        { time: '08:40', title: 'ALPHABED INN 札幌大通公園Check out', icon: 'fas fa-key', lat: 43.05844213138715, lng: 141.3465660672788, navUrl: 'https://www.google.com/maps/search/?api=1&query=ALPHABED+INN+%E6%9C%AD%E5%B9%8C%E5%A4%A7%E9%80%9A%E5%85%AC%E5%9C%92', guide: '整理行囊，退房準備離開札幌。', travelTime: '15分', travelMode: 'drive' },
                         { 
                             time: '09:00', title: '諏訪神社', icon: 'fas fa-torii-gate', 
-                            lat: 43.07615886620978, lng: 141.35430225260995, 
+                            lat: 43.07605698719345, lng: 141.3543880832995, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C+%E8%AB%8F%E8%A8%AA%E7%A5%9E%E7%A4%BE', 
                             guide: '以絕美花手水聞名的神社，祈求家庭和睦。', 
                             travelTime: '1小時', travelMode: 'drive',
@@ -1165,7 +1049,7 @@
                         },
                         { 
                             time: '10:35', title: 'J Net Car Rental 新千歲空港店', icon: 'fas fa-car', 
-                            lat: 42.82940539478899, lng: 141.68640700048593, 
+                            lat: 42.829342448156495, lng: 141.68655720419264, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=J+Net+Car+Rental+%E6%96%B0%E5%8D%83%E6%AD%B2%E7%A9%BA%E6%B8%AF%E5%BA%97', 
                             mapCode: '113 892 173*44',
                             guide: '加滿油並歸還陪伴多日的愛車。', 
@@ -1244,20 +1128,14 @@
             watch(currentTab, t => { if (t === 'map') nextTick(() => { initMap(); map.invalidateSize(); updateMapMarkers(); }); });
             watch(currentDay, () => { if (currentTab.value === 'map') updateMapMarkers(); });
 
-            watch(showExpenseForm, (newValue) => {
-                if (newValue && !editingExpenseId.value) { // Only reset if showing form and not editing an existing item
-                    resetNewExpenseForm();
-                }
-            });
-
             return { 
                 currentTab, currentDay, currentDayData, itinerary, dateScroller, selectDay,
-                expenses, showExpenseForm, newExpense, totalExpensesTWD, groupedExpenses, totalExpensesByCategory, 
-                saveExpense, deleteExpense, editExpense, exportExpensesToExcel
+                expenses, showExpenseForm, newExpense, totalExpensesJPY, groupedExpenses, 
+                addExpense, deleteExpense, sharePage
             };
         }
     }).mount('#app');
 </script>
 
 </body>
-</html>>l>
+</html>
