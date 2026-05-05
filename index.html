@@ -234,7 +234,7 @@
                             <div class="font-bold text-milktea-900 text-sm">{{ exp.description }}</div>
                             <div class="text-[10px] text-milktea-400">{{ exp.category }}</div>
                         </div>
-                        <div class="font-bold text-milktea-900">¥ {{ exp.amount.toLocaleString() }}</div>
+                        <div class="font-bold text-milktea-900">¥ {{(exp.amount || 0).toLocaleString()}}</div>
                         <button @click="deleteExpense(exp.id)" class="text-red-300"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
@@ -332,7 +332,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="text-right">
-                                    <div class="font-bold text-milktea-900">¥ {{ exp.amount.toLocaleString() }}</div>
+                                    <div class="font-bold text-milktea-900">¥ {{(exp.amount || 0).toLocaleString()}}</div>
                                 </div>
                                 <button @click="deleteExpense(exp.id)" class="text-milktea-100 hover:text-red-300 transition-colors">
                                     <i class="fas fa-trash-alt text-xs"></i>
