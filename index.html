@@ -249,15 +249,32 @@
                             <option value="其他">✨ 其他</option>
                         </select>
                     </div>
-                    <input v-model.number="newExpense.amount" type="number" placeholder="金額 (JPY)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                    <input v-model="newExpense.shop" type="text" placeholder="商店名稱" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                    <div class="flex gap-2">
+                        <select v-model="newExpense.paymentMethod" class="flex-1 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                            <option value="現金">現金</option>
+                            <option value="PayPay">PayPay</option>
+                            <option value="Suica">Suica</option>
+                            <option value="信用卡">信用卡</option>
+                        </select>
+                        <select v-model="newExpense.currency" class="flex-initial w-24 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                            <option value="JPY">JPY</option>
+                            <option value="TWD">TWD</option>
+                        </select>
+                        <input v-model.number="newExpense.amount" type="number" :placeholder="'金額 (' + newExpense.currency + ')'" class="flex-1 bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                    </div>
                     <input v-model="newExpense.description" type="text" placeholder="描述 (如：六花亭伴手禮)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
+                    <input v-model="newExpense.receiptUrl" type="text" placeholder="收據圖片連結 (選填)" class="w-full bg-milktea-50 border border-milktea-100 text-milktea-800 text-sm rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-milktea-400">
                     <button @click="addExpense" class="w-full bg-milktea-400 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-milktea-500 active:scale-[0.98] transition-all">確認新增</button>
                 </div>
             </div>
 
-            <div v-else class="mb-4">
-                <button @click="showExpenseForm = true" class="w-full bg-white border-2 border-dashed border-milktea-200 text-milktea-400 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
+            <div v-else class="mb-4 flex gap-2">
+                <button @click="showExpenseForm = true" class="flex-1 bg-white border-2 border-dashed border-milktea-200 text-milktea-400 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
                     <i class="fas fa-plus-circle"></i> 新增一筆支出
+                </button>
+                <button @click="exportExpensesToExcel" class="flex-initial w-1/4 bg-white border-2 border-milktea-200 text-milktea-800 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
+                    <i class="fas fa-file-excel"></i> 匯出
                 </button>
             </div>
 
@@ -285,16 +302,29 @@
                                     <i v-else class="fas fa-ellipsis-h"></i>
                                 </div>
                                 <div>
-                                    <div class="font-bold text-milktea-900 text-sm">{{ exp.description }}</div>
-                                    <div class="text-[10px] text-milktea-400">{{ exp.category }}</div>
+                                    <div class="font-bold text-milktea-900 text-sm">{{ exp.shop }} - {{ exp.description }}</div>
+                                    <div class="text-[10px] text-milktea-400 flex items-center gap-1">
+                                        <span>{{ exp.category }}</span>
+                                        <span>•</span>
+                                        <span>{{ exp.paymentMethod }}</span>
+                                        <a v-if="exp.receiptUrl" :href="exp.receiptUrl" target="_blank" class="ml-1 text-blue-500 hover:underline">
+                                            <i class="fas fa-receipt"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="text-right">
-                                    <div class="font-bold text-milktea-900">¥ {{ exp.amount.toLocaleString() }}</div>
+                                    <div class="font-bold text-milktea-900">
+                                        <span v-if="exp.currency === 'JPY'">¥</span><span v-else>NT$</span> {{ exp.amount.toLocaleString() }}
+                                    </div>
+                                    <div v-if="exp.currency === 'JPY'" class="text-[10px] text-milktea-400">約 NT$ {{ exp.amountTWD.toLocaleString() }}</div>
                                 </div>
                                 <button @click="deleteExpense(exp.id)" class="text-milktea-100 hover:text-red-300 transition-colors">
                                     <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                                <button @click="editExpense(exp.id)" class="text-milktea-100 hover:text-milktea-500 transition-colors">
+                                    <i class="fas fa-edit text-xs"></i>
                                 </button>
                             </div>
                         </div>
@@ -335,6 +365,7 @@
             // Expense State
             const expenses = ref([]);
             const showExpenseForm = ref(false);
+            const editingExpenseId = ref(null);
             const newExpense = ref({
                 day: 1,
                 category: '餐飲',
@@ -357,18 +388,69 @@
                 return groups;
             });
 
-            const addExpense = () => {
-                if (!newExpense.value.amount || !newExpense.value.description) {
-                    alert('請填寫完整資訊');
+            const resetNewExpenseForm = () => {
+                newExpense.value.day = currentDay.value + 1; // Default to current day
+                newExpense.value.shop = '';
+                newExpense.value.category = '餐飲'; // Reset category to default
+                newExpense.value.paymentMethod = '現金'; // Reset paymentMethod to default
+                newExpense.value.amount = null;
+                newExpense.value.currency = 'JPY'; // Reset currency to default
+                newExpense.value.description = '';
+                newExpense.value.receiptUrl = '';
+                editingExpenseId.value = null; // Clear editing state
+            };
+
+            const saveExpense = () => {
+                if (!newExpense.value.amount || !newExpense.value.description || !newExpense.value.shop) {
+                    alert('請填寫完整資訊 (商店、金額、描述)');
                     return;
                 }
-                expenses.value.push({
-                    id: Date.now(),
-                    ...newExpense.value
-                });
-                // Reset form
-                newExpense.value.amount = null;
-                newExpense.value.description = '';
+                
+                let amountJPY = null;
+                let amountTWD = null;
+
+                if (newExpense.value.currency === 'JPY') {
+                    amountJPY = newExpense.value.amount;
+                    amountTWD = Math.round(newExpense.value.amount * 0.205 * 100) / 100; // Round to 2 decimal places
+                } else { // TWD
+                    amountTWD = newExpense.value.amount;
+                    amountJPY = Math.round(newExpense.value.amount / 0.205 * 100) / 100; // For display consistency
+                }
+
+                if (editingExpenseId.value) {
+                    // Update existing expense
+                    const index = expenses.value.findIndex(exp => exp.id === editingExpenseId.value);
+                    if (index !== -1) {
+                        expenses.value[index] = {
+                            id: editingExpenseId.value,
+                            day: newExpense.value.day,
+                            shop: newExpense.value.shop,
+                            category: newExpense.value.category,
+                            paymentMethod: newExpense.value.paymentMethod,
+                            amountJPY: amountJPY,
+                            amountTWD: amountTWD,
+                            currency: newExpense.value.currency,
+                            description: newExpense.value.description,
+                            receiptUrl: newExpense.value.receiptUrl
+                        };
+                    }
+                } else {
+                    // Add new expense
+                    expenses.value.push({
+                        id: Date.now(),
+                        day: newExpense.value.day,
+                        shop: newExpense.value.shop,
+                        category: newExpense.value.category,
+                        paymentMethod: newExpense.value.paymentMethod,
+                        amountJPY: amountJPY,
+                        amountTWD: amountTWD,
+                        currency: newExpense.value.currency,
+                        description: newExpense.value.description,
+                        receiptUrl: newExpense.value.receiptUrl
+                    });
+                }
+                
+                resetNewExpenseForm();
                 showExpenseForm.value = false;
                 saveExpenses();
             };
@@ -378,6 +460,41 @@
                     expenses.value = expenses.value.filter(e => e.id !== id);
                     saveExpenses();
                 }
+            };
+
+            const exportExpensesToExcel = () => {
+                if (expenses.value.length === 0) {
+                    alert('沒有任何支出記錄可以匯出。');
+                    return;
+                }
+
+                const headers = ['日期', '商店', '費用類別', '付款方式', '金額(JPY)', '金額(TWD)', '描述', '收據連結'];
+                const csvRows = [];
+                csvRows.push(headers.join(','));
+
+                expenses.value.forEach(exp => {
+                    const date = itinerary.value.find(day => day.dayNum === exp.day)?.dateShort || `Day ${exp.day}`;
+                    const row = [
+                        `"${date}"`,
+                        `"${exp.shop}"`,
+                        `"${exp.category}"`,
+                        `"${exp.paymentMethod}"`,
+                        exp.amountJPY !== null ? exp.amountJPY : '',
+                        exp.amountTWD !== null ? exp.amountTWD : '',
+                        `"${exp.description}"`,
+                        `"${exp.receiptUrl}"`
+                    ];
+                    csvRows.push(row.join(','));
+                });
+
+                const csvString = csvRows.join('\n');
+                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.setAttribute('download', 'hokkaido_expenses.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             };
 
             const saveExpenses = () => {
@@ -1127,14 +1244,20 @@
             watch(currentTab, t => { if (t === 'map') nextTick(() => { initMap(); map.invalidateSize(); updateMapMarkers(); }); });
             watch(currentDay, () => { if (currentTab.value === 'map') updateMapMarkers(); });
 
+            watch(showExpenseForm, (newValue) => {
+                if (newValue && !editingExpenseId.value) { // Only reset if showing form and not editing an existing item
+                    resetNewExpenseForm();
+                }
+            });
+
             return { 
                 currentTab, currentDay, currentDayData, itinerary, dateScroller, selectDay,
-                expenses, showExpenseForm, newExpense, totalExpensesJPY, groupedExpenses, 
-                addExpense, deleteExpense, sharePage
+                expenses, showExpenseForm, newExpense, totalExpensesTWD, groupedExpenses, totalExpensesByCategory, 
+                saveExpense, deleteExpense, editExpense, exportExpensesToExcel
             };
         }
     }).mount('#app');
 </script>
 
 </body>
-</html>
+</html>>l>
