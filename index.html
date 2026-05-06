@@ -210,49 +210,8 @@
             <div class="h-6"></div>
         </div>
 
-        <div v-show="currentTab === 'map'" class="h-full flex flex-col relative"><div id="map" class="shadow-md border border-milktea-200"></div></div>
-
-        <!-- 記帳頁面 -->
-        <div v-show="currentTab === 'expenses'" class="h-full flex flex-col bg-[#FDFBF7]">
-            <div class="px-4 pt-4 pb-2 z-10 sticky top-0 bg-[#FDFBF7]">
-                <div class="grid grid-cols-2 gap-3 mb-4 mt-2">
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-milktea-100 flex flex-col items-center justify-center">
-                        <span class="text-[10px] font-bold text-milktea-400 mb-1 uppercase tracking-wider">總支出 (JPY)</span>
-                        <span class="text-xl font-bold text-milktea-900">¥ {{ totalExpensesJPY.toLocaleString() }}</span>
-                    </div>
-                </div>
-                <button @click="showExpenseForm = true" class="w-12 h-12 rounded-full bg-milktea-400 text-white text-2xl font-bold flex items-center justify-center shadow-md hover:bg-milktea-500 active:scale-[0.98] transition-all fixed bottom-20 right-6 z-50">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto px-4 pb-20">
-                <div v-if="expenses.length === 0" class="text-center text-milktea-400 text-sm mt-10">目前還沒有任何記錄</div>
-                <div v-else class="space-y-2">
-                    <div v-for="exp in expenses" :key="exp.id" class="bg-white rounded-2xl p-4 shadow-sm border border-milktea-100 flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-milktea-900 text-sm">{{ exp.description }}</div>
-                            <div class="text-[10px] text-milktea-400">{{ exp.category }}</div>
-                        </div>
-                        <div class="font-bold text-milktea-900">¥ {{(exp.amount || 0).toLocaleString()}}</div>
-                        <button @click="deleteExpense(exp.id)" class="text-red-300"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Form -->
-            <div v-if="showExpenseForm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-                    <h3 class="font-bold text-milktea-900 mb-4 hidden">新增支出</h3>
-                    <input v-model="newExpense.category" type="text" placeholder="類別" class="w-full bg-milktea-50 border p-2 mb-2 rounded-lg">
-                    <input v-model.number="newExpense.amount" type="number" placeholder="金額 (JPY)" class="w-full bg-milktea-50 border p-2 mb-2 rounded-lg">
-                    <input v-model="newExpense.description" type="text" placeholder="描述" class="w-full bg-milktea-50 border p-2 mb-4 rounded-lg">
-                    <div class="flex gap-2">
-                        <button @click="showExpenseForm = false" class="flex-1 bg-gray-200 py-2 rounded-lg font-bold">取消</button>
-                        <button @click="addExpense" class="flex-1 bg-milktea-400 text-white py-2 rounded-lg font-bold">儲存</button>
-                    </div>
-                </div>
-            </div>
+        <div v-show="currentTab === 'map'" class="h-full flex flex-col relative">
+            <div id="map" class="shadow-md border border-milktea-200"></div>
         </div>
 
         <div v-show="currentTab === 'expenses'" class="h-full flex flex-col">
@@ -297,7 +256,9 @@
             </div>
 
             <div v-else class="mb-4">
-
+                <button @click="showExpenseForm = true" class="w-full bg-white border-2 border-dashed border-milktea-200 text-milktea-400 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-milktea-50 transition-colors">
+                    <i class="fas fa-plus-circle"></i> 新增一筆支出
+                </button>
             </div>
 
             <!-- Expense List -->
@@ -330,7 +291,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="text-right">
-                                    <div class="font-bold text-milktea-900">¥ {{(exp.amount || 0).toLocaleString()}}</div>
+                                    <div class="font-bold text-milktea-900">¥ {{ exp.amount.toLocaleString() }}</div>
                                 </div>
                                 <button @click="deleteExpense(exp.id)" class="text-milktea-100 hover:text-red-300 transition-colors">
                                     <i class="fas fa-trash-alt text-xs"></i>
