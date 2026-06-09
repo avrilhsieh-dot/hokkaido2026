@@ -167,6 +167,7 @@
                             </div>
                             
                             <p class="text-xs text-milktea-500 mt-2 italic leading-relaxed">{{ item.guide }}</p>
+                            <p v-if="item.note" class="text-xs text-red-600 mt-1 font-bold leading-relaxed">{{ item.note }}</p>
 
                             <div v-if="item.parkings && item.parkings.length > 0" class="mt-3 pt-3 border-t border-milktea-50 space-y-2">
                                 <div v-for="(p, pIdx) in item.parkings" :key="pIdx" class="bg-milktea-50 rounded-lg p-2 text-[10px] border border-milktea-100">
@@ -289,14 +290,14 @@
                 {
                     dayNum: 2, dateShort: '7/4', title: '函館經典巡禮', area: '函館',
                     events: [
-                        { time: '08:00', title: '早餐：板前料理「旬」', icon: 'fas fa-utensils', lat: 41.7699603, lng: 140.7355628, guide: '位於飯店 1F 的精緻早點。', travelTime: '15分', travelMode: 'drive', hideNav: true },
+                        { time: '07:45', title: '早餐：板前料理「旬」', icon: 'fas fa-utensils', lat: 41.7699603, lng: 140.7355628, guide: '位於飯店 1F 的精緻早點。', travelTime: '15分', travelMode: 'drive', hideNav: true },
                         { 
-                            time: '09:15', title: '五稜郭塔展望台＋五稜郭公園＋六花亭', icon: 'fas fa-star', lat: 41.7946699, lng: 140.75402, navUrl: 'https://www.google.com/maps/place/Gory%C5%8Dkaku+Tower/@41.7946699,140.75402,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46bb53c0eb3:0x75f5f82028f1a89e!8m2!3d41.7946699!4d140.75402!16s%2Fg%2F120kngn6?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', guide: '俯瞰星形堡壘。', travelTime: '15分', travelMode: 'drive',
+                            time: '09:00', title: '五稜郭塔展望台＋五稜郭公園＋六花亭', icon: 'fas fa-star', lat: 41.7946699, lng: 140.75402, navUrl: 'https://www.google.com/maps/place/Gory%C5%8Dkaku+Tower/@41.7946699,140.75402,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46bb53c0eb3:0x75f5f82028f1a89e!8m2!3d41.7946699!4d140.75402!16s%2Fg%2F120kngn6?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', guide: '俯瞰星形堡壘。', travelTime: '15分', travelMode: 'drive',
                             parkings: [
+                                { name: '函館市五稜郭観光駐車場', mc: '86 165 294*10', navUrl: 'https://www.google.com/maps/place/%E5%87%BD%E9%A4%A8%E5%B8%82%E4%BA%94%E7%A8%9C%E9%83%AD%E8%A6%B3%E5%85%89%E9%A7%90%E8%BB%8A%E5%A0%B4/@41.796863,140.750698,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46b76e6b5f3:0x4f156d18d0e5508d!8m2!3d41.796859!4d140.7532783!16s%2Fg%2F11wg5xvgz?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', capacity: '97台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] },
                                 { name: '函館市芸術ホール-Ａ', mc: '86 135 897*05', navUrl: 'https://www.google.com/maps/place/%E5%87%BD%E9%A4%A8%E5%B8%82%E8%8A%B8%E8%A1%93%E3%83%9B%E3%83%BC%E3%83%AB%E9%A7%90%E8%BB%8A%E5%A0%B4A/@41.7940681,140.7494879,17z/data=!4m10!1m2!2m1!1z5Ye96aSo5biC6Iq46KGT44Ob44O844OrLe-8oQ!3m6!1s0x5f9ef5123cf33f3f:0xd4f076ce69f26ec0!8m2!3d41.7940681!4d140.753994!15sChzlh73ppKjluILoirjooZPjg5vjg7zjg6st77yhWh8iHeWHvemkqCDluIIg6Iq46KGTIOODm-ODvOODqyBhkgELcGFya2luZ19sb3SaASRDaGREU1VoTk1HOW5TMFZKUTBGblNVTlNNVTlFTTE5UlJSQULgAQD6AQQIMhAN!16s%2Fg%2F11h64rghtt?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', capacity: '225台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] },
                                 { name: '函館市芸術ホール-B', mc: '86 135 807*14', navUrl: 'https://www.google.com/maps/search/%E5%87%BD%E9%A4%A8%E5%B8%82%E8%8A%B8%E8%A1%93%E3%83%9B%E3%83%BC%E3%83%AB+%E9%A7%90%E8%BB%8A%E5%A0%B4B', capacity: '225台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] },
-                                { name: '函館市芸術ホール-C', mc: '86 136 785*70', navUrl: 'https://www.google.com/maps/place/函館市芸術ホール駐車場C/@41.7931618,140.7537483,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46ede37acd1:0x5417626f54f8cdd!8m2!3d41.7931578!4d140.7563232!16s%2Fg%2F11cn9lhch2?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D', capacity: '225台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] },
-                                { name: '函館市五稜郭観光駐車場', mc: '86 165 294*10', navUrl: 'https://www.google.com/maps/place/%E5%87%BD%E9%A4%A8%E5%B8%82%E4%BA%94%E7%A8%9C%E9%83%AD%E8%A6%B3%E5%85%89%E9%A7%90%E8%BB%8A%E5%A0%B4/@41.796863,140.750698,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46b76e6b5f3:0x4f156d18d0e5508d!8m2!3d41.796859!4d140.7532783!16s%2Fg%2F11wg5xvgz?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', capacity: '97台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] }
+                                { name: '函館市芸術ホール-C', mc: '86 136 785*70', navUrl: 'https://www.google.com/maps/place/函館市芸術ホール駐車場C/@41.7931618,140.7537483,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef46ede37acd1:0x5417626f54f8cdd!8m2!3d41.7931578!4d140.7563232!16s%2Fg%2F11cn9lhch2?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D', capacity: '225台', feeInfo: ['1 小時內 200 日圓，之後每 30 分鐘 100 日圓'] }
                             ]
                         },
                         { 
@@ -307,7 +308,7 @@
                             ]
                         },
                         { 
-                            time: '13:10', title: '無印良品 SHARE STAR 函館', icon: 'fas fa-shopping-bag', lat: 41.7895949, lng: 140.7519594, navUrl: 'https://www.google.com/maps/place/%E7%84%A1%E5%8D%B0%E8%89%AF%E5%93%81+SHARE+STAR%E5%87%BD%E9%A4%A8%E5%BA%97/@41.7895989,140.7493791,17z/data=!3m2!4b1!5s0x5f9ef4706eeb82f3:0x2f920a3ad01b31b5!4m6!3m5!1s0x5f9ef4706ef192bd:0x2fa2a91e64c3e61e!8m2!3d41.7895949!4d140.7519594!16s%2Fg%2F11dybmtd_5?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', guide: '全北海道最大規模無印。', travelTime: '15分', travelMode: 'drive',
+                            time: '13:10', title: '無印良品 SHARE STAR 函館1-3F', icon: 'fas fa-shopping-bag', lat: 41.7895949, lng: 140.7519594, navUrl: 'https://www.google.com/maps/place/%E7%84%A1%E5%8D%B0%E8%89%AF%E5%93%81+SHARE+STAR%E5%87%BD%E9%A4%A8%E5%BA%97/@41.7895989,140.7493791,17z/data=!3m2!4b1!5s0x5f9ef4706eeb82f3:0x2f920a3ad01b31b5!4m6!3m5!1s0x5f9ef4706ef192bd:0x2fa2a91e64c3e61e!8m2!3d41.7895949!4d140.7519594!16s%2Fg%2F11dybmtd_5?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', guide: '全北海道最大規模無印。', note: '購物時，需出示停車證折抵停車費。', travelTime: '15分', travelMode: 'drive',
                             parkings: [
                                 { name: '停車場②-タイムズ 函館本町第3服務', mc: '86 135 442*75', navUrl: 'https://www.google.com/maps/place/Times/@41.78981,140.7501088,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef5484dda0bc3:0xf7bd94f6fedd572d!8m2!3d41.789806!4d140.7526891!16s%2Fg%2F11gjbq_1mf?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', capacity: '38台', feeInfo: ['20分鐘 220日圓', '於SHARE STAR內店家消費並刷停車卡感應，可享 60分鐘免費'] },
                                 { name: '停車場③-名美パーキング第 7', mc: '86 135 389*18', navUrl: 'https://www.google.com/maps/place/%E5%90%8D%E7%BE%8E%E3%83%91%E3%83%BC%E3%82%AD%E3%83%B3%E3%82%B0%EF%BC%88%E7%AC%AC7%EF%BC%89/@41.7893636,140.7520622,17z/data=!3m1!4b1!4m6!3m5!1s0x5f9ef5b84e356443:0xc837adb5e59f51b3!8m2!3d41.7893596!4d140.7546425!16s%2Fg%2F11kg997l13?entry=ttu&g_ep=EgoyMDI2MDQwOC4wIKXMDSoASAFQAw%3D%3D', capacity: '22台', feeInfo: ['30分鐘 100日圓'] },
