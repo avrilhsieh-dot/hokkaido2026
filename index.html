@@ -167,7 +167,9 @@
                             </div>
                             
                             <p class="text-xs text-milktea-500 mt-2 italic leading-relaxed">{{ item.guide }}</p>
-                            <p v-if="item.note" class="text-xs text-red-600 mt-1 font-bold leading-relaxed">{{ item.note }}</p>
+                            <template v-if="item.note">
+                                <p v-for="(n, nIdx) in (Array.isArray(item.note) ? item.note : [item.note])" :key="nIdx" class="text-xs text-red-600 mt-1 font-bold leading-relaxed">{{ n }}</p>
+                            </template>
 
                             <div v-if="item.parkings && item.parkings.length > 0" class="mt-3 pt-3 border-t border-milktea-50 space-y-2">
                                 <div v-for="(p, pIdx) in item.parkings" :key="pIdx" class="bg-milktea-50 rounded-lg p-2 text-[10px] border border-milktea-100">
@@ -781,7 +783,8 @@
                             time: '09:50', title: '東急百貨札幌店', icon: 'fas fa-building', 
                             lat: 43.0668641, lng: 141.3525418, 
                             navUrl: 'https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E6%80%A5%E7%99%BE%E8%B2%A8%E5%BA%97+%E6%9C%AD%E5%B9%8C%E5%BA%97', 
-                            guide: '札幌車站旁經典百貨，逛街購物。', 
+                            guide: '札幌車站旁經典百貨，逛街購物。',
+                            note: ['Biccamera：請攜帶停車票和收據前往5樓的綜合資訊櫃檯。', '東急：停車優惠僅限於認證當下的消費內容，之後即使在其他店鋪再消費，也無法追加延長停車優惠時間。'],
                             travelTime: '5分', travelMode: 'walk',
                             parkings: [
                                 { 
@@ -789,18 +792,18 @@
                                     mc: '9 522 652*34',
                                     navUrl: 'https://www.google.com/maps/place/Tokyuhyakkatensapporoten+Parking+Lot/@43.066868,141.3499669,17z/data=!4m16!1m9!3m8!1s0x5f0b29001d3ebec7:0x72bf6b62144b0900!2sTokyuhyakkatensapporoten+Parking+Lot!8m2!3d43.0668641!4d141.3525418!9m1!1b1!16s%2Fg%2F11w44h9mnx!3m5!1s0x5f0b29001d3ebec7:0x72bf6b62144b0900!8m2!3d43.0668641!4d141.3525418!16s%2Fg%2F11w44h9mnx?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D', 
                                     capacity: '120台',
-                                    feeInfo: ['首 1小時 400日圓，之後每 30分鐘 200日圓', '優惠：於Biccamera店內消費滿 2,000日圓以上，享 1小時免費停車；滿 5,000日圓以上，享 2小時免費停車。', '　　　於東急百貨店內消費滿 2,000日圓以上，享 1小時免費停車。'] 
+                                    feeInfo: ['首 1小時 500日圓，之後每 30分鐘 250日圓', '優惠：於Biccamera店內消費滿 2,000日圓以上，享 1小時免費停車；滿 5,000日圓以上，享 2小時免費停車。', '　　　於東急百貨店內消費滿 2,000日圓以上，享 1小時免費停車。'] 
                                 },
                                 { 
                                     name: '日の丸パーキング', 
                                     mc: '9 523 784*76',
                                     navUrl: 'https://www.google.com/maps/place/Hinomaru+Parking+Lot/@43.0680851,141.3530887,17z/data=!3m1!4b1!4m6!3m5!1s0x5f0b2973808edcc5:0xb204c565df7d44c2!8m2!3d43.0680812!4d141.3556636!16s%2Fg%2F1tdnf10b?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D', 
                                     capacity: '300台',
-                                    feeInfo: ['首 1小時 400日圓，之後每 30分鐘 200日圓', '優惠：於Biccamera店內消費滿 2,000日圓以上，享 1小時免費停車；滿 5,000日圓以上，享 2小時免費停車。', '　　　於東急百貨店內消費滿 2,000日圓以上，享 1小時免費停車。'] 
+                                    feeInfo: ['20分鐘 100日圓(小型車)', '20分鐘 150日圓(大型車)', '優惠：於Biccamera店內消費滿 2,000日圓以上，享 1小時免費停車；滿 5,000日圓以上，享 2小時免費停車。', '　　　於東急百貨店內消費滿 2,000日圓以上，享 1小時免費停車。'] 
                                 }
                             ]
                         },
-                        { time: '11:00', title: '午餐：湯咖喱 奥芝商店 站前創成寺', icon: 'fas fa-bowl-food', lat: 43.06697398380002, lng: 141.35432826795417, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E5%A5%A5%E8%8A%9D%E5%95%86%E5%BA%97+%E9%A7%85%E5%89%8D%E5%89%B5%E6%88%90%E5%AF%BA', guide: '濃郁鮮蝦湯底的排隊名店湯咖哩。', travelTime: '5分', travelMode: 'walk' },
+                        { time: '11:20', title: '午餐：SOUP CURRY KING ゲートウェイ店', icon: 'fas fa-bowl-food', lat: 43.0683457, lng: 141.3467472, navUrl: 'https://www.google.com/maps/place/SOUP+CURRY+KING+ゲートウェイ店/@43.0683496,141.3441723,17z/data=!3m2!4b1!5s0x5f0b290aa2950c15:0xe546e7dc04b7a260!4m6!3m5!1s0x5f0b29f4a23cb067:0xe0f266772bcdb398!8m2!3d43.0683457!4d141.3467472!16s%2Fg%2F11srgch5sp?entry=ttu&g_ep=EgoyMDI2MDYwMy4xIKXMDSoASAFQAw%3D%3D', guide: '札幌湯咖哩名店，醇厚湯頭搭配香嫩雞腿與大塊蔬菜。', travelTime: '5分', travelMode: 'walk' },
                         { time: '12:10', title: '東急百貨札幌店', icon: 'fas fa-bag-shopping', lat: 43.0668641, lng: 141.3525418, navUrl: 'https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E6%80%A5%E7%99%BE%E8%B2%A8%E5%BA%97+%E6%9C%AD%E5%B9%8C%E5%BA%97', guide: '餐後繼續於百貨內自由活動。', travelTime: '50分', travelMode: 'drive' },
                         { 
                             time: '15:45', title: 'Es Con Field Hokkaido', icon: 'fas fa-baseball', 
