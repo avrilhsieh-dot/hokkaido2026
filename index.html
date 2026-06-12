@@ -171,6 +171,17 @@
                                 <p v-for="(n, nIdx) in (Array.isArray(item.note) ? item.note : [item.note])" :key="nIdx" class="text-xs text-red-600 mt-1 font-bold leading-relaxed">{{ n }}</p>
                             </template>
 
+                            <template v-if="item.backup">
+                                <div class="flex items-center flex-wrap gap-y-1 mt-2">
+                                    <span class="bg-milktea-400 text-white px-1.5 py-0.5 rounded text-[9px] font-bold mr-2">{{ item.backup.label || '備案' }}</span>
+                                    <span class="text-xs font-bold text-milktea-800">{{ item.backup.name }}</span>
+                                    <a v-if="item.backup.url" :href="item.backup.url" target="_blank" class="nav-icon-btn shadow-sm !w-6 !h-6 !ml-1">
+                                        <i class="fas fa-location-arrow text-[10px]"></i>
+                                    </a>
+                                </div>
+                                <p v-if="item.backup.mc" class="text-xs text-milktea-800 font-bold mt-1">Map Code: {{ item.backup.mc }}</p>
+                            </template>
+
                             <div v-if="item.parkings && item.parkings.length > 0" class="mt-3 pt-3 border-t border-milktea-50 space-y-2">
                                 <div v-for="(p, pIdx) in item.parkings" :key="pIdx" class="bg-milktea-50 rounded-lg p-2 text-[10px] border border-milktea-100">
                                     <div class="flex flex-col gap-1.5">
@@ -533,7 +544,8 @@
                             navUrl: 'https://www.google.com/maps/place/%E7%B4%94%E5%B9%B3%E6%B4%8B%E9%A3%9F+junpei/@43.589254,142.4655026,17z/data=!3m1!4b1!4m6!3m5!1s0x5f0cc5c4d51501ad:0xe83759303bff24b0!8m2!3d43.5892501!4d142.4680775!16s%2Fg%2F1wn33gj_?entry=ttu&g_ep=EgoyMDI2MDQxOS4wIKXMDSoASAFQAw%3D%3D', 
                             mapCode: '389 011 378*81',
                             parkingCapacity: '18台',
-                            guide: '美瑛超人氣排隊名店，必吃炸蝦丼 (海老丼)。', 
+                            guide: '美瑛超人氣排隊名店，必吃炸蝦丼 (海老丼)。',
+                            backup: { label: '午餐備案', name: 'ファームレストラン千代田', url: 'https://www.google.com/maps/place/Farm+Restaurant+Chiyoda/@43.5427684,142.489184,17z/data=!3m1!4b1!4m6!3m5!1s0x5f0cc8d74199e7f5:0x698b5495538f611!8m2!3d43.5427684!4d142.4917589!16s%2Fg%2F1v2jcqdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D', mc: '349 734 046*22' }, 
                             travelTime: '5分', travelMode: 'drive' 
                         },
                         { 
